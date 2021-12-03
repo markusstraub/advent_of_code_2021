@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "advent_of_code_2021"
+version = "1.0"
+description = "Advent of Code 2021"
+authors = ["Markus Straub"]
+
+[tool.poetry.dependencies]
+python = "3.9.*"
+more-itertools = "^8.12.0"
+
+[tool.poetry.dev-dependencies]
+black = "*"
+flake8 = "^4.0"
+pytest = "^6.0"
+
+[tool.pytest.ini_options]
+# -ra: show extra test summary [...] (a)ll except passed [...]
+# --tb=style: traceback print mode (auto/long/short/line/native/no)
+# -W: set which warnings to report, "error" turns matching warnings into exceptions
+# --doctest-modules: also run doctests
+addopts = [
+    "-ra",
+    "--tb=line",
+    "-W error",
+    "--doctest-modules"
+]
+# let pytest recurse through the whole project (to find doctests)
+# but avoid some places where definitely no tests will be found
+norecursedirs = [
+  ".git",
+  ".pytest_cache",
+  ".ipynb_checkpoints",
+  "__pycache__",
+  "data",
+  "notebooks"
+]
+
+[tool.black]
+#line-length = 100
+target-version = ['py39']
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
