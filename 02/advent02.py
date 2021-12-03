@@ -21,7 +21,7 @@ def get_movement_generator(file=None):
     return (get_movement_tuple(line) for line in open(file))
 
 
-def get_position_v1(movements, start_horizontal=0, start_depth=0):
+def get_position_part1(movements, start_horizontal=0, start_depth=0):
     horizontal = start_horizontal
     depth = start_depth
     for direction, units in movements:
@@ -36,7 +36,7 @@ def get_position_v1(movements, start_horizontal=0, start_depth=0):
     return (horizontal, depth)
 
 
-def get_position_v2(movements, start_horizontal=0, start_depth=0, start_aim=0):
+def get_position_part2(movements, start_horizontal=0, start_depth=0, start_aim=0):
     horizontal = start_horizontal
     depth = start_depth
     aim = start_aim
@@ -54,14 +54,14 @@ def get_position_v2(movements, start_horizontal=0, start_depth=0, start_aim=0):
 
 
 if __name__ == "__main__":
-    horizontal_v1, depth_v1 = get_position_v1(get_movement_generator("advent02.txt"))
+    horizontal_v1, depth_v1 = get_position_part1(get_movement_generator("advent02.txt"))
     print(
-        f"v1: the subway moved {horizontal_v1} horizontal and {depth_v1} depth",
-        f"(multiplied that's {horizontal_v1 * depth_v1})",
+        f"part1: submarine movement: {horizontal_v1} horizontal, {depth_v1} depth",
+        f"(multiplied: {horizontal_v1 * depth_v1})",
     )
 
-    horizontal_v2, depth_v2 = get_position_v2(get_movement_generator("advent02.txt"))
+    horizontal_v2, depth_v2 = get_position_part2(get_movement_generator("advent02.txt"))
     print(
-        f"v2: the subway moved {horizontal_v2} horizontal and {depth_v2} depth",
-        f"(multiplied that's {horizontal_v2 * depth_v2})",
+        f"part2: submarine movement: {horizontal_v2} horizontal, {depth_v2} depth",
+        f"(multiplied: {horizontal_v2 * depth_v2})",
     )
