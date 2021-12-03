@@ -1,6 +1,4 @@
-#%%
 import itertools
-import operator
 import more_itertools
 
 test_input = """00100
@@ -15,8 +13,6 @@ test_input = """00100
 11001
 00010
 01010"""
-
-#%%
 
 
 class DiagnosticBitSum:
@@ -44,7 +40,6 @@ class DiagnosticBitSum:
 
     def calc_gamma(self, record_count):
         bits = [1 if val > (record_count - val) else 0 for val in self.int_array]
-        print(bits)
         return DiagnosticBitSum(bits)
 
     def calc_epsilon(self, record_count):
@@ -79,24 +74,17 @@ def gen_diagnostics(filename=None):
     else:
         with open(filename) as file:
             for line in file:
-                print(line)
                 yield DiagnosticBitSum.from_string(line.strip())
 
 
-filename = "advent03.txt"
-record_count = more_itertools.ilen(gen_diagnostics(filename))
-print(f"found {record_count} diagnostic bits.")
+if __name__ == "__main__":
+    filename = "advent03.txt"
+    record_count = more_itertools.ilen(gen_diagnostics(filename))
+    print(f"found {record_count} diagnostic bits.")
 
-accumulated = DiagnosticBitSum.zero()
-for bits in gen_diagnostics(filename):
-    print(repr(bits))
-    accumulated += bits
+    accumulated = DiagnosticBitSum.zero()
+    for bits in gen_diagnostics(filename):
+        accumulated += bits
 
-print(f"accumulated: {repr(accumulated)}")
-
-power_consumption = accumulated.calc_power_consumption(record_count)
-print(f"part1: submarine power consumption is {power_consumption}.")
-
-# epsilon_rate = calc_epsilon_rate(accumulated, record_count)
-
-# %%
+    power_consumption = accumulated.calc_power_consumption(record_count)
+    print(f"part1: submarine power consumption is {power_consumption}.")
