@@ -14,11 +14,12 @@ def get_movement_tuple(string):
     return (tokens[0], int(tokens[1]))
 
 
-def get_movement_generator(file=None):
+def get_movement_generator(filename=None):
     """returns test data if no file is given"""
-    if file is None:
+    if filename is None:
         return (get_movement_tuple(line) for line in test_input.split(sep="\n"))
-    return (get_movement_tuple(line) for line in open(file))
+    with open(filename) as file:
+        return (get_movement_tuple(line) for line in file)
 
 
 def get_position_part1(movements, start_horizontal=0, start_depth=0):

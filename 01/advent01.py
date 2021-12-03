@@ -14,11 +14,12 @@ test_input = """199
 263"""
 
 
-def get_sonar_sweep_generator(file=None):
+def get_sonar_sweep_generator(filename=None):
     """returns test data if no file is given"""
-    if file is None:
+    if filename is None:
         return (int(line) for line in test_input.split())
-    return (int(line) for line in open(file))
+    with open(filename) as file:
+        return (int(line) for line in file)
 
 
 def b_larger_than_a(a, b):
