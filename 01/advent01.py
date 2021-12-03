@@ -1,6 +1,6 @@
-#%%
 import itertools
 import more_itertools
+
 
 test_input = """199
 200
@@ -12,9 +12,6 @@ test_input = """199
 269
 260
 263"""
-
-
-# %%
 
 
 def get_sonar_sweep_generator(file=None):
@@ -38,72 +35,44 @@ def get_increase_count(sonar_sweep):
     return more_itertools.ilen(itertools.filterfalse(lambda x: not x, increases))
 
 
-#%%
-# our "unit tests"
-assert more_itertools.ilen(get_sonar_sweep_generator()) == 10
-assert get_increase_count(get_sonar_sweep_generator()) == 7
-
-#%%
-
-sonar_length = more_itertools.ilen(get_sonar_sweep_generator("advent01.txt"))
-sonar_increases = get_increase_count(get_sonar_sweep_generator("advent01.txt"))
-print(f"sonar sweep with {sonar_length} samples contains {sonar_increases} increases")
-
-#%% below here is the old approach.. TODO rework the rolling window stuff (why did the generator provided through a function not work properly)
-
-#%%
-
-regular = (line for line in test_input.split())
-delayed = itertools.chain([None], (line for line in test_input.split()))
-
-# print(list(map(b_larger_than_a, delayed, regular)))
-increases = len(
-    list(itertools.filterfalse(lambda x: not x, map(b_larger_than_a, delayed, regular)))
-)
-print(f"found {increases} increases in file")
-
-# print(list(regular))
-# print(list(delayed))
-
-
-# %%
-def get_input():
-    return (int(line) for line in test_input.split())
-
-
-def get_rolling_window(window_size):
+def get_rolling_window_generators(file, window_size):
     generators = []
     for i in range(0, window_size):
-        generators.append(itertools.islice(get_sonar_sweep_generator(), i, None))
+        generators.append(itertools.islice(get_sonar_sweep_generator(file), i, None))
     return generators
 
 
-window_size = 3
+def get_rolling_window_increase_count(file=None, window_size=3):
+    """this is really overcomplicated, but I wanted to play with generators"""
+    tuples = list(zip(*get_rolling_window_generators(file, window_size)))
+    # print(tuples)
+    sums = list(map(sum, tuples))
+    # print(sums)
 
-print(list(zip(get_rolling_window(window_size))))
+    regular = (s for s in sums)
+    delayed = itertools.chain([None], (s for s in sums))
 
-for gen in get_rolling_window(window_size):
-    print(list(gen))
-
-print(list(get_rolling_window(3)))
-# %%
-tuples = list(
-    zip(
-        itertools.islice(get_sonar_sweep_generator(), 0, None),
-        itertools.islice(get_input(), 1, None),
-        itertools.islice(get_input(), 2, None),
+    # print(list(map(b_larger_than_a, delayed, regular)))
+    increases = len(
+        list(
+            itertools.filterfalse(
+                lambda x: not x, map(b_larger_than_a, delayed, regular)
+            )
+        )
     )
-)
-print(tuples)
-sums = list(map(sum, tuples))
-print(sums)
+    return increases
 
-regular = (s for s in sums)
-delayed = itertools.chain([None], (s for s in sums))
 
-# print(list(map(b_larger_than_a, delayed, regular)))
-increases = len(
-    list(itertools.filterfalse(lambda x: not x, map(b_larger_than_a, delayed, regular)))
-)
-print(f"found {increases} increases in file")
-# %%
+if __name__ == "__main__":
+    sonar_length = more_itertools.ilen(get_sonar_sweep_generator("advent01.txt"))
+    print(f"using sonar sweep data with {sonar_length} samples.")
+    sonar_increases = get_increase_count(get_sonar_sweep_generator("advent01.txt"))
+    print(f"part1: sonar sweep found {sonar_increases} increases")
+
+    window_size = 3
+    sonar_increases_rolling = get_rolling_window_increase_count(
+        file="advent01.txt", window_size=window_size
+    )
+    print(
+        f"part2: sonar sweep found {sonar_increases_rolling} increases (rolling window: {window_size})"
+    )
