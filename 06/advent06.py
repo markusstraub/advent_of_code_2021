@@ -1,10 +1,7 @@
-#%%
 import itertools
 import more_itertools
 
 test_input = "3,4,3,1,2"
-
-#%%
 
 
 def read_flock(filename=None):
@@ -41,9 +38,10 @@ def calc_flock_size(flock):
     return more_itertools.ilen(flock)
 
 
-# %%
-flock_size = calc_flock_size(evolve_flock(read_flock("advent06.txt"), days=80))
-print(f"part1: flock size on day 80 = {flock_size}")
-flock_size = calc_flock_size(evolve_flock(read_flock("advent06.txt"), days=256))
-print(f"part2: flock size on day 256 = {flock_size}")
-# %%
+if __name__ == "__main__":
+    flock_size = calc_flock_size(evolve_flock(read_flock("advent06.txt"), days=80))
+    print(f"part1: flock size on day 80 = {flock_size}")
+
+    # this will never finish.. exponential growth
+    # flock_size = calc_flock_size(evolve_flock(read_flock("advent06.txt"), days=256))
+    # print(f"part2: flock size on day 256 = {flock_size}")
