@@ -1,3 +1,4 @@
+import sys
 import itertools
 import more_itertools
 
@@ -42,6 +43,10 @@ def calc_flock_size(flock):
 
 
 if __name__ == "__main__":
+    print(
+        f"warning: this script only works for {sys.getrecursionlimit()} days or less (recursion limit!)"
+    )
+
     flock_size = calc_flock_size(evolve_flock(read_flock("advent06.txt"), days=80))
     print(f"part1: flock size on day 80 = {flock_size}")
 
