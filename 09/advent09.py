@@ -1,5 +1,3 @@
-#%%
-import more_itertools
 from collections import namedtuple
 
 Point = namedtuple("Point", "x y height")
@@ -19,14 +17,19 @@ class HeightMap:
             return None
         return self.height_map[y][x]
 
-    def calc_neighbor_heights(self, x, y):
+    def calc_neighbor_points(self, x, y):
         neighbors = []
-        neighbors.append(self.get_height(x, y - 1))
-        neighbors.append(self.get_height(x, y + 1))
-        neighbors.append(self.get_height(x + 1, y))
-        neighbors.append(self.get_height(x - 1, y))
-        # print(f"neighbors of {x}/{y}: {neighbors}")
-        return list(filter(lambda height: height != None, neighbors))
+
+        new_points = [(x, y - 1), (x, y + 1), (x + 1, y), (x - 1, y)]
+        for new_point in new_points:
+            new_x, new_y = new_point
+            height = self.get_height(new_x, new_y)
+            if height != None:
+                neighbors.append(Point(new_x, new_y, height))
+        return neighbors
+
+    def calc_neighbor_heights(self, x, y):
+        return [point.height for point in self.calc_neighbor_points(x, y)]
 
     def is_lowpoint(self, point):
         return self.is_lowpoint_xy(point.x, point.y)
@@ -46,6 +49,20 @@ class HeightMap:
 
     def calc_total_risk(self):
         return sum([point.height + 1 for point in self.calc_lowpoints()])
+
+    def calc_basin(self, lowpoint):
+        basin = set()
+        to_expand = [lowpoint]
+        while len(to_expand) > 0:
+            point = to_expand.pop()
+            basin.add(point)
+            neighbors = self.calc_neighbor_points(point.x, point.y)
+            neighbors = filter(lambda point: point.height < 9, neighbors)
+            to_expand.extend(set(neighbors).difference(basin))
+        return basin
+
+    def calc_basins(self):
+        return [self.calc_basin(lowpoint) for lowpoint in self.calc_lowpoints()]
 
     def __iter__(self):
         for x in range(self.x_count):
@@ -73,5 +90,9 @@ if __name__ == "__main__":
     total_risk = height_map.calc_total_risk()
     print(f"part1: total risk level is {total_risk}")
 
-
-# %%
+    m = read_height_map("advent09.txt")
+    basin_sizes = sorted([len(basin) for basin in m.calc_basins()], reverse=True)
+    multi = basin_sizes[0] * basin_sizes[1] * basin_sizes[2]
+    print(
+        f"part2: the largest basins are of size {basin_sizes[0:3]}, multiplied that's {multi}"
+    )
