@@ -14,17 +14,17 @@ class HeightMap:
     def is_in_bounds(self, x, y):
         return x >= 0 and x < self.x_count and y >= 0 and y < self.y_count
 
-    def get(self, x, y):
+    def get_height(self, x, y):
         if not self.is_in_bounds(x, y):
             return None
         return self.height_map[y][x]
 
-    def get_neighbor_heights(self, x, y):
+    def calc_neighbor_heights(self, x, y):
         neighbors = []
-        neighbors.append(self.get(x, y - 1))
-        neighbors.append(self.get(x, y + 1))
-        neighbors.append(self.get(x + 1, y))
-        neighbors.append(self.get(x - 1, y))
+        neighbors.append(self.get_height(x, y - 1))
+        neighbors.append(self.get_height(x, y + 1))
+        neighbors.append(self.get_height(x + 1, y))
+        neighbors.append(self.get_height(x - 1, y))
         # print(f"neighbors of {x}/{y}: {neighbors}")
         return list(filter(lambda height: height != None, neighbors))
 
@@ -32,19 +32,25 @@ class HeightMap:
         return self.is_lowpoint_xy(point.x, point.y)
 
     def is_lowpoint_xy(self, x, y):
-        height = self.get(x, y)
+        height = self.get_height(x, y)
         if height is None:
             return None
 
         larger_neighbors = filter(
-            lambda v: v <= height, self.get_neighbor_heights(x, y)
+            lambda v: v <= height, self.calc_neighbor_heights(x, y)
         )
         return len(list(larger_neighbors)) == 0
+
+    def calc_lowpoints(self):
+        return list(filter(lambda point: self.is_lowpoint(point), self))
+
+    def calc_total_risk(self):
+        return sum([point.height + 1 for point in self.calc_lowpoints()])
 
     def __iter__(self):
         for x in range(self.x_count):
             for y in range(self.y_count):
-                yield Point(x, y, self.get(x, y))
+                yield Point(x, y, self.get_height(x, y))
 
     def __str__(self):
         rows_for_printing = []
@@ -53,7 +59,7 @@ class HeightMap:
         return "\n".join(rows_for_printing)
 
 
-def read_heightmap(filename="test_advent09.txt"):
+def read_height_map(filename="test_advent09.txt"):
     """return test data if no file is given"""
     height_map = []
     with open(filename) as file:
@@ -62,15 +68,10 @@ def read_heightmap(filename="test_advent09.txt"):
     return HeightMap(height_map)
 
 
-height_map = read_heightmap()
-print(height_map)
+if __name__ == "__main__":
+    height_map = read_height_map("advent09.txt")
+    total_risk = height_map.calc_total_risk()
+    print(f"part1: total risk level is {total_risk}")
 
-lowpoints = list(filter(lambda point: height_map.is_lowpoint(point), height_map))
-total_risk = sum([point.height + 1 for point in lowpoints])
-print(f"part1: total risk level of {len(lowpoints)} low points is {total_risk}")
-# print(list(lowpoints))
-
-
-# %%
 
 # %%
