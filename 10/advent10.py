@@ -1,6 +1,3 @@
-from collections import namedtuple
-
-
 CORRUPTION_SCORES = {")": 3, "]": 57, "}": 1197, ">": 25137}
 AUTOCOMPLETION_SCORES = {")": 1, "]": 2, "}": 3, ">": 4}
 OPENING_BRACKETS = "({[<"
