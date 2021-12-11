@@ -94,22 +94,25 @@ class EnergyMap:
     def _ready_to_flash(self):
         return filter(lambda point: self.get(point) > MAX_ENERGY, self)
 
-
-energy_map = EnergyMap()
-print(energy_map.calc_neighbors(Point(0, 0)))
-
-energy_map.simulate(steps=1)
-print(str(energy_map))
-print("---")
-energy_map = EnergyMap()
-energy_map.simulate(steps=2)
-print(str(energy_map))
+    def all_octopusses_flashed(self):
+        return len(list(filter(lambda point: self.get(point) > 0, self))) == 0
 
 
-energy_map = EnergyMap(FILENAME)
-flashes = energy_map.simulate(steps=100)
-print(f"part1: we observed {flashes} flashes")
+if __name__ == "__main__":
+    energy_map = EnergyMap(FILENAME)
+    flashes = energy_map.simulate(steps=100)
+    print(f"part1: we observed {flashes} flashes")
 
-# EnergyMap().get(Point(2, 6))
+    energy_map = EnergyMap(FILENAME)
+    iteration = 1
+    while True:
+        energy_map.simulate(steps=1)
+        if energy_map.all_octopusses_flashed():
+            break
+        iteration += 1
+    print(
+        f"part2: all octopusses flashed during iteration {iteration}. It's safe to go!"
+    )
+
 
 # %%
