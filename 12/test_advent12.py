@@ -1,4 +1,4 @@
-from advent12 import as_new_list, is_small_cave, Caves
+from advent12 import as_new_list, is_small_cave, Caves, filter_small_caves_only_once
 
 
 def test_is_small_cave():
@@ -18,5 +18,5 @@ def test_as_new_list():
 
 def test_routing():
     caves = Caves()
-    paths = caves.find_all_paths("start", "end")
+    paths = caves.find_all_paths("start", "end", filter_small_caves_only_once)
     assert len(paths) == 10
