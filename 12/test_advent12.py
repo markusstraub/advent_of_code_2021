@@ -1,4 +1,10 @@
-from advent12 import as_new_list, is_small_cave, Caves, filter_small_caves_only_once
+from advent12 import (
+    as_new_list,
+    is_small_cave,
+    Caves,
+    filter_small_caves_only_once,
+    filter_small_caves_only_twice,
+)
 
 
 def test_is_small_cave():
@@ -16,7 +22,13 @@ def test_as_new_list():
     assert two_items[-1] == "bingi"
 
 
-def test_routing():
+def test_routing_part1():
     caves = Caves()
     paths = caves.find_all_paths("start", "end", filter_small_caves_only_once)
     assert len(paths) == 10
+
+
+def test_routing_part2():
+    caves = Caves()
+    paths = caves.find_all_paths("start", "end", filter_small_caves_only_twice)
+    assert len(paths) == 36
