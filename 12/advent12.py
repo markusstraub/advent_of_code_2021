@@ -1,6 +1,5 @@
 from collections import defaultdict
 from collections import Counter
-import itertools
 import more_itertools
 
 FILENAME = "advent12.txt"
@@ -51,16 +50,6 @@ class Caves:
                 start, end = line.strip().split("-")
                 self._edges[start].add(end)
                 self._edges[end].add(start)
-
-    def is_single_small_cave(self, name):
-        """I misunderstood "single cave",
-        we don't actually need this method :)"""
-        if not self.is_small_cave(name):
-            return False
-        for cave in self._edges.get(name):
-            if self.is_small_cave(cave):
-                return False
-        return True
 
     def find_all_paths(self, start, end, exploration_filter):
         full_paths = list()
