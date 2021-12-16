@@ -1,5 +1,4 @@
 from advent12 import (
-    as_new_list,
     is_small_cave,
     Caves,
     filter_small_caves_only_once,
@@ -13,11 +12,11 @@ def test_is_small_cave():
 
 
 def test_as_new_list():
-    one_item = as_new_list("stringi")
+    one_item = list(["stringi"])
     assert len(one_item) == 1
     assert one_item[-1] == "stringi"
 
-    two_items = as_new_list(["stringi", "bingi"])
+    two_items = list(["stringi", "bingi"])
     assert len(two_items) == 2
     assert two_items[-1] == "bingi"
 
